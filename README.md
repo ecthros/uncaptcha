@@ -1,6 +1,6 @@
 # uncaptcha
 
-Defeating Google's audio reCaptcha system. 
+Defeating Google's audio reCaptcha system with 85% accuracy.
 
 ## Inspiration
 
@@ -54,6 +54,9 @@ Additionally, we have removed our API keys from all the necessary queries. If yo
 ## Contributors
 
 [Kkevsterrr](https://github.com/Kkevsterrr)
+
 [dpatel19](https://github.com/dpatel19)
+
 [ecthros](https://github.com/ecthros)
+
 [Dave Levin](https://www.cs.umd.edu/~dml/)
