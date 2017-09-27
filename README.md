@@ -1,6 +1,6 @@
 # uncaptcha
 
-Defeating Google's audio reCaptcha system with 85% accuracy.
+Defeating Google's audio reCaptcha system with 85% accuracy. ![uncaptcha](https://user-images.githubusercontent.com/14065974/30930456-c2cf7e0a-a38f-11e7-869e-d7aa783e6f02.gif)
 
 ## Inspiration
 
@@ -32,7 +32,7 @@ $ apt-get install sox ffmpeg selenium
 Then, to kick off the PoC:
 
 ```
-$ python reddit.py
+$ python main.py
 ``` 
 
 This opens reddit.com, interacts with the page to go to account signup, generates a fake username, email, password, and then attacks the audio captcha. Once the captcha is completed (whether it passed or not), the browser exits. 
