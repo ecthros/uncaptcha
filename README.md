@@ -43,11 +43,11 @@ Please read our paper, located [here](https://www.usenix.org/system/files/confer
 
 ## Disclaimer
 
-This is by no means intended to be a working model. unCaptcha was originally intended to be a proof of concept. A number of new protections have been put in place and this code has been modified so that unCaptcha will no longer work.
+unCaptcha is intended to be a proof of concept.  As of the time of [our paper](https://www.usenix.org/system/files/conference/woot17/woot17-paper-bock.pdf), we found it to successfully solve reCaptcha's audio challenges with 85% success.  Since that time, reCaptcha appears to include some additional protections that limit unCaptcha's success.
 
-Although Google has since changed its code so that this attack will no longer work, it is worth noting that it is probably still possible to create a defeat of Google's current ReCaptcha. Therefore, much of this code has been slightly changed, and will certainly no longer work. Please be careful when doing research in this field and responsibly disclose any potential vulnerabilities to Google immediately.
+For instance, Google has also improved their browser automation detection. This means that Selenium cannot be used in its current state to get captchas from Google. This may lead to Google sending odd audio segments back to the end user.  Additionally, we have observed that some audio challenges include not only digits, but small snippets of spoken text.
 
-Google has also improved their code such that browser automation will be detected. This means that Selenium cannot be used in its current state to get captchas from Google. This may lead to Google sending odd audio segments back to the end user.
+We encourage you to be careful when doing research in this field, to be mindful of local, state, and federal law, and to responsibly disclose any potential vulnerabilities to Google immediately.
 
 Additionally, we have removed our API keys from all the necessary queries. If you are looking to recreate some of the work or are doing your own research in this area, you will need to acquire API keys from each of the six services used. These keys are delineated in our files by a long string of the character 'X'. 
 
