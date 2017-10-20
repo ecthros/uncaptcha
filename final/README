@@ -1,0 +1,3 @@
+This data has been split into two parts, part1 and part2.
+
+Each task contains the original audio file (the .mp3) and segments for each number (the .wav). Additionally, our results from uncaptcha are in the results.json file. The oracle contains the correct final string.
