@@ -34,7 +34,7 @@ $ apt-get install sox ffmpeg selenium
 Then, to kick off the PoC:
 
 ```
-$ python main.py
+$ python main.py --audio --reddit
 ``` 
 
 This opens reddit.com, interacts with the page to go to account signup, generates a fake username, email, password, and then attacks the audio captcha. Once the captcha is completed (whether it passed or not), the browser exits. 
