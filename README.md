@@ -54,7 +54,7 @@ Additionally, we have removed our API keys from all the necessary queries. If yo
 ## Example
 
 [![Watch the video](https://img.youtube.com/watch?v=wXrTQzskJLE0.jpg)](https://www.youtube.com/watch?v=wXrTQzskJLE "UnCaptcha Example")
-
+[![Slides](https://drive.google.com/file/d/0BwuogdPv-7DxMDA3N3l1X09nV1U/view?usp=sharing)](https://drive.google.com/file/d/0BwuogdPv-7DxMDA3N3l1X09nV1U/view?usp=sharing)
 
 ## Contributors
 
