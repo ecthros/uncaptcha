@@ -11,22 +11,22 @@ import threading
 import googleapiclient
 from collections import Counter
 
-
+# Set up logging and pretty printing
 LEVEL = logging.INFO
 logging.basicConfig(stream=sys.stderr, level=LEVEL)
 logging.getLogger('oauth2client.transport').setLevel(logging.ERROR)
 logging.getLogger('googleapiclient.discovery').setLevel(logging.CRITICAL)  
 logging.getLogger('oauth2client.client').setLevel(logging.ERROR)
-
 pp = pprint.PrettyPrinter(indent=4)
 
-
+# Set up default guess
 #DEFAULT = "X" # all un-identified digits remain unknown
 DEFAULT = "6" # all un-identified digits are mapped to "6"
 
+# Set up api list
 apis = ["googleCloud", "wit", "bing", "ibm", "google", "sphinx"]
 
-#Simple homophone mapping, taking any exact matches and returning the digit (layer one mapping)
+# Simple homophone mapping, taking any exact matches and returning the digit (layer one mapping)
 def homophone(num):
 	if num in ["one", "1", "won"]:
 		return "1"
@@ -52,18 +52,42 @@ def homophone(num):
 
 # Apply both layers of phonetic mapping
 # More complex mapping, where homophones and near-homophones are used in conjunction
-#Weights are given to words that appeared for certain words more often
+# Heigher weights are given to words that are phonetically close to a digit
 def text_to_num(num, source_name="", results_dict={}):
 	num = num.strip()
 	if not source_name in results_dict:
 		results_dict[source_name] = [str(num)]
 	if not source_name + "_fil" in results_dict:
 		results_dict[source_name + "_fil"] = list()
-	# results_dict[source_name] += (num) # append unfiltered guess
-	# print(num)
-	digits = list()
 
-	if num in ["one", "1", "juan", "Warren", "fun", "who won"]:# or "one" in num: or "un" in num:
+	digits = list()
+	########## FIRST LAYER MAPPING ##########
+	# These match correspond to exact homophone matches
+	if num in ["one", "won" "1"]:
+		digits.append(1)
+	if num in ["two", "to", "too", "2"]:
+		digits.append(2)
+	if num in ["three", "3"]:
+		digits.append(3)
+	if num in ["four", "for", "fore", "4"]:
+		digits.append(4)
+	if num in ["five", "5"]:
+		digits.append(5)
+	if num in ["six", "6"]:
+		digits.append(6)
+	if num in ["six", "6"]:
+		digits.append(6)
+	if num in ["seven", "7"]:
+		digits.append(7)
+	if num in ["eight", "ate", "8"]:
+		digits.append(8)
+	if num in ["nine", "9"]:
+		digits.append(9)
+	if num in ["zero", "0"]:
+		digits.append(0)
+	########## SECOND LAYER MAPPING ##########
+	# These match correspond to near homophone matches
+	if num in ["one", "1", "juan", "Warren", "fun", "who won"]:
 		digits.append(1)
 	if num in ["to", "two", "too", "2", "who", "true", "do", "so", "you", "hello", "lou"] or num.endswith("ew") or num.endswith("do"):
 		digits.append(2)
@@ -71,7 +95,7 @@ def text_to_num(num, source_name="", results_dict={}):
 		digits.append(3)
 	if num in ["four", "for", "fourth", "4", "oar", "or", "more", "porn"] or "oor" in num:
 		digits.append(4)
-	if num in ["five", "5", "hive", "fight", "fifth", "why", "find", "fuck"] or "ive" in num:
+	if num in ["five", "5", "hive", "fight", "fifth", "why", "find"] or "ive" in num:
 		digits.append(5)
 	if num in ["six", "6", "sex", "big", "sic", "set", "dicks", "it", "thank"] or num.endswith("icks") or num.endswith("ick") or num.endswith("inks") or num.endswith("ex"):
 		digits.append(6)
@@ -79,75 +103,34 @@ def text_to_num(num, source_name="", results_dict={}):
 		digits.append(7)
 	if num in ["eight hundred", "o. k.", "eight", "8", "hate", "fate", "hey", "it", "they", "a", "A", "they have", "then"] or "ate" in num:
 		digits.append(8)
-
-	if num in ["yeah I", "no", "nine","i'm", "9", "mine", "brian", "now i", "no i", "no I", "during", "now I", "no", "night", "eyes", "none", "non", "bind", "nice", "no i'm"] or "ine" in num:
+	if num in ["yeah I", "no", "nine", "i'm", "9", "mine", "brian", "now i", "no i", "no I", "during", "now I", "no", "night", "eyes", "none", "non", "bind", "nice", "no i'm"] or "ine" in num:
 		digits.append(9)
 	if num in ["a hero", "the euro", "the hero", "Europe", "yeah well", "the o.", "hey oh", "zero", "hero", "0", "yeah","here", "well", "yeah well", "euro", "yo", "hello", "arrow", "Arrow", "they don't", "girl", "bill", "you know"] or "ero" in num:
 		digits.append(0)
 	if num in ["hi", "i", "I", "bye", "by", "buy"]:
 		digits.append(5)
-
 		digits.append(9)
-
-	#Higher confidence
-	if num in ["one", "1"]:
-		digits.append(1)
-	if num in ["two", "to", "too", "2", "who"]:
-		digits.append(2)
-		#digits.append(2)
-		#digits.append(2)
-	if num in ["three", "3", "we", "free"]:
-		digits.append(3)
-	if num in ["four", "for", "4", "or"]:
-		digits.append(4)
-		#digits.append(4)
-	if num in ["five", "5"]:
-		digits.append(5)
-	if num in ["six", "6", "sick", "sex", "big", "set"] or num.endswith("anks"):
-		digits.append(6)
-		
-		#digits.append(6)
-	if num in ["six", "6", "sex", "set"] or num.endswith("anks"):
-		digits.append(6)
-		digits.append(6)
-	if num in ["seven", "7", "get in"]:
-		
-		digits.append(7)
-
-	if num in ["eight", "hate", "8"]:
-		digits.append(8)
-		digits.append(8)
-	if num in ["nine", "9"]:
-		digits.append(9)
-	if num in ["zero", "0", "the o."]:
-		digits.append(0)
+	# Combine the output of the filters
 	retStr = ''.join([str(x) for x in digits])
-	if(retStr == '' or retStr == None):
-		results_dict[source_name + "_fil"] += "X"
-		return None
-	else:
-		results_dict[source_name + "_fil"] += retStr[0]
-		return retStr
-	
-	retStr = ''.join([str(x) for x in digits])
-	if(retStr == '' or retStr == None):
+	if (retStr == '' or retStr == None):
+		# Digit could not be classified
 		results_dict[source_name + "_fil"] += DEFAULT
 		return DEFAULT
 	else:
 		results_dict[source_name + "_fil"] += str(digits[0])
 		return retStr
 
+#################### SPEECH-TO-TEXT WEB APIS ####################
 ###### The following functions interact with the APIs we used to query for each segment ########
 ###### Keys have been removed from this section #######
-
 #Query Sphinx
 def sphinx(audio, vals, i, results_dict, timing):
 	try:
 		#print("Sphinx: ")
-                s = time.time()
+				s = time.time()
 		vals[i] = text_to_num(r.recognize_sphinx(audio), "sphinx", results_dict)
-                timing["sphinx"].append(time.time() - s)
-                print "timing2", timing
+				timing["sphinx"].append(time.time() - s)
+				print "timing2", timing
 	except sr.UnknownValueError:
 		logging.debug("Sphinx could not understand audio")
 		results_dict["sphinx"] = [DEFAULT]
@@ -173,12 +156,12 @@ def googleCloud(audio, vals, i, results_dict, timing):
 	}"""
 	try:
 		s = time.time()
-                #print("Google Cloud Speech: ")
+				#print("Google Cloud Speech: ")
 		vals[i] = text_to_num(r.recognize_google_cloud(audio, \
 			preferred_phrases=["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"],\
 			 credentials_json=GOOGLE_CLOUD_SPEECH_CREDENTIALS), "googleCloud", results_dict)
-                timing["googleCloud"].append(time.time() - s)
-                print "timing", timing["googleCloud"]
+				timing["googleCloud"].append(time.time() - s)
+				print "timing", timing["googleCloud"]
 		#print("Google Cloud " + str(vals[i]))
 	except sr.UnknownValueError:
 		logging.debug("Google Cloud Speech could not understand audio")
@@ -188,18 +171,17 @@ def googleCloud(audio, vals, i, results_dict, timing):
 		logging.debug("Could not request results from Google Cloud Speech service; {0}".format(e))
 		results_dict["googleCloud"] = [DEFAULT]
 		results_dict["googleCloud_fil"] = [DEFAULT]
-        except:
-            pass
-
+		except:
+			pass
 #Query Wit
 def wit(audio, vals, i, results_dict, timing):
 	# recognize speech using Wit.ai
 	WIT_AI_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx"  # Wit.ai keys are 32-character uppercase alphanumeric strings
 	try:
-                s = time.time()
+				s = time.time()
 		#print("Wit.ai: ")
 		vals[i] = text_to_num(r.recognize_wit(audio, key=WIT_AI_KEY), "wit", results_dict)
-                timing["wit"].append(time.time() - s)
+				timing["wit"].append(time.time() - s)
 		#print("Wit " + str(vals[i]))
 	except sr.UnknownValueError:
 		logging.debug("Wit.ai could not understand audio")
@@ -209,18 +191,17 @@ def wit(audio, vals, i, results_dict, timing):
 		logging.debug("Could not request results from Wit.ai service; {0}".format(e))
 		results_dict["wit"] = [DEFAULT]
 		results_dict["wit_fil"] = [DEFAULT]
-
 #Query Bing
 def bing(audio, vals, i, results_dict, timing):
 	# recognize speech using Microsoft Bing Voice Recognition
 	# Microsoft Bing Voice Recognition API keys 32-character lowercase hexadecimal strings
-        
+		
 	BING_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 	try:
-                s = time.time()
+				s = time.time()
 		#print("Microsoft Bing Voice Recognition: ")
 		vals[i] = text_to_num(r.recognize_bing(audio, key=BING_KEY), "bing", results_dict)
-                timing["bing"].append(time.time() - s)
+				timing["bing"].append(time.time() - s)
 	except sr.UnknownValueError:
 		logging.debug("Microsoft Bing Voice Recognition could not understand audio")
 		results_dict["bing"] = [DEFAULT]
@@ -229,18 +210,17 @@ def bing(audio, vals, i, results_dict, timing):
 		logging.debug("Could not request results from Microsoft Bing Voice Recognition service; {0}".format(e))
 		results_dict["bing"] = [DEFAULT]
 		results_dict["bing_fil"] = [DEFAULT]
-
 # Query IBM
 def ibm(audio, vals, i, results_dict, timing, show_all=False):
 	# recognize speech using IBM Speech to Text
 	IBM_USERNAME = "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"  # IBM Speech to Text usernames are strings of the form XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 	IBM_PASSWORD = "XXXXXXXXXX"  # IBM Speech to Text passwords are mixed-case alphanumeric strings
 	try:
-                s = time.time()
+				s = time.time()
 		#print("IBM Speech to Text: ")
 		vals[i] = text_to_num(r.recognize_ibm(audio, username=IBM_USERNAME, \
 			password=IBM_PASSWORD, show_all=False), "ibm", results_dict)
-                timing["ibm"].append(time.time() - s)
+				timing["ibm"].append(time.time() - s)
 	except sr.UnknownValueError:
 		logging.debug("IBM Speech to Text could not understand audio")
 		results_dict["ibm"] = [DEFAULT]
@@ -249,19 +229,17 @@ def ibm(audio, vals, i, results_dict, timing, show_all=False):
 		logging.debug("Could not request results from IBM Speech to Text service; {0}".format(e))
 		results_dict["ibm"] = [DEFAULT]
 		results_dict["ibm_fil"] = [DEFAULT]
-
 #Query Google Speech-To-Text
 def google(audio, vals, i, results_dict, timing):
 	try:
 		#print("Google: ")
-                s= time.time()
+				s= time.time()
 		vals[i] = text_to_num(r.recognize_google(audio), "google", results_dict)
-                timing["google"].append(time.time() - s)
+				timing["google"].append(time.time() - s)
 	except:
 		logging.debug("Google could not understand")
 		results_dict["google"] = [DEFAULT]
 		results_dict["google_fil"] = [DEFAULT]
-
 #Query Houndify. This was not used as we found Houndify difficult to incorportate.
 def houndify(audio, vals, i, results_dict, timing):
 	# recognize speech using Houndify
@@ -281,6 +259,7 @@ def houndify(audio, vals, i, results_dict, timing):
 		results_dict["houndify"] = [DEFAULT]
 		results_dict["houndify_fil"] = [DEFAULT]
 
+# Apply a new phonetic mapping to the saved data
 def re_test(new_fil, base_dir="data"):
 	try:
 		tasks = os.listdir(base_dir)
@@ -313,7 +292,7 @@ def re_test(new_fil, base_dir="data"):
 			csv_row.append(oracle[dig_count])
 			# re-filter each api for digit dig_count
 			for api in apis:
-                                #print api, results_dict[api], dig_count
+								#print api, results_dict[api], dig_count
 				csv_row.append(results_dict[api][dig_count])
 				new_dig_guess[i] = new_fil(results_dict[api][dig_count]) # apply new filter
 				new_results_dict[api + "_fil"].append(new_dig_guess[i])
@@ -343,28 +322,27 @@ def re_test(new_fil, base_dir="data"):
 			json.dump(new_results_dict, log)
 		csv_log.close()
 def getNums(task_path, audio_files):
-        print audio_files
+	print audio_files
 	num_str = ""
 	results_dict = dict()
 	start = time.time()
 	i = 0
-        ts = []
-        ans = ["X" for j in range(0, 11)]
-        print ans
+	ts = []
+	ans = ["X" for j in range(0, 11)]
+	print ans
 	for f in sorted(audio_files):
-                ts.append(multiprocessing.Process(target=getNum, args=((f, results_dict, i, ans))))
+		ts.append(multiprocessing.Process(target=getNum, args=((f, results_dict, i, ans))))
 		logging.debug(f)
 		#num_str += str(getNum(f, results_dict, i, ans))
 		i += 1
-                break
-        print ts
-        for t in ts:
-            t.start()
-        for t in ts:
-            t.join()
-        end = time.time()
-        print ans
-        print end-start
+		print ts
+		for t in ts:
+			t.start()
+		for t in ts:
+			t.join()
+		end = time.time()
+		print ans
+		print end-start
 	results_dict["total_time"] = end - start
 	logging.debug(num_str)
 	results_dict["final"] = num_str
@@ -387,9 +365,9 @@ def getNum(audio_file, results_dict, digit_num=0, ans=[]):
 	results_dict_threaded = manage_vars.dict()
 	results = []
 	threads = []
-        timed = manage_vars.dict()
-        for api in apis:
-            timed[api] = manage_vars.list()
+		timed = manage_vars.dict()
+		for api in apis:
+			timed[api] = manage_vars.list()
 	apis_func = [googleCloud, sphinx, wit, bing, google, ibm]
 	i = 0
 	start = time.time()
@@ -398,12 +376,12 @@ def getNum(audio_file, results_dict, digit_num=0, ans=[]):
 		threads.append(t)
 		t.start()
 		i += 1
-        
+		
 	for thread in threads:
 		thread.join()
 	end = time.time()
-        print "getnumtime", end-start
-        print timed
+		print "getnumtime", end-start
+		print timed
 	results_dict["time" + str(digit_num)] = end - start
 	# merge the results with the past results
 	for name in results_dict_threaded.keys():
@@ -426,14 +404,14 @@ def getNum(audio_file, results_dict, digit_num=0, ans=[]):
 	results = sorted(results, key=results.count, reverse=True)
 	if not results:
 		logging.debug("FOUND NOTHING")
-                ans[digit_num] = 'X'
-		return 'X' # seems good enough
+				ans[digit_num] = DEFAULT
+		return DEFAULT
 	else:
 		# print(results[0])
 		logging.info("DETERMINED AS: " + str(results[0]))
-                print ans
-                print digit_num
-                ans[digit_num] = results[0]
+				print ans
+				print digit_num
+				ans[digit_num] = results[0]
 		return results[0]
 
 def test_dir(directory):
@@ -454,15 +432,8 @@ def test_some(start_dir="data", start=1, end=2):
 		task = "task"+str(task_num)
 		task_path = os.path.join(start_dir, task)
 		test_dir(task_path)
-def test():
-	logging.basicConfig(stream=sys.stderr, level=LEVEL)
-	files = ["task2_001.wav", "task2_002.wav", "task2_005.wav", "task2_009.wav", "task2_014.wav"]
-	task_path = "./audio/task2"
-	files = [os.path.join(task_path,f) for f in files]
-	getNums(task_path, files)
 
-
-NEW_FILTER = text_to_num #text_to_num
+NEW_FILTER = text_to_num
 
 if __name__ == "__main__":
 	re_test(NEW_FILTER, "new_data")
