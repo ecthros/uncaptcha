@@ -343,5 +343,5 @@ def main():
                 guess_again = False
   
     input("")
-# main()
-test_all()
+main()
+# test_all()
