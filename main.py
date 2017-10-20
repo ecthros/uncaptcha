@@ -14,7 +14,6 @@ import random
 import os
 import urllib
 import time
-import ris
 import audio
 import threading
 import argparse

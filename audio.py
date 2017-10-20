@@ -6,7 +6,6 @@ import logging, sys
 import multiprocessing 
 import pprint
 import csv
-import new_filter_function
 import threading
 import googleapiclient
 from collections import Counter
@@ -127,10 +126,10 @@ def text_to_num(num, source_name="", results_dict={}):
 def sphinx(audio, vals, i, results_dict, timing):
 	try:
 		#print("Sphinx: ")
-				s = time.time()
+		s = time.time()
 		vals[i] = text_to_num(r.recognize_sphinx(audio), "sphinx", results_dict)
-				timing["sphinx"].append(time.time() - s)
-				print "timing2", timing
+		timing["sphinx"].append(time.time() - s)
+		print "timing2", timing
 	except sr.UnknownValueError:
 		logging.debug("Sphinx could not understand audio")
 		results_dict["sphinx"] = [DEFAULT]
@@ -156,12 +155,13 @@ def googleCloud(audio, vals, i, results_dict, timing):
 	}"""
 	try:
 		s = time.time()
-				#print("Google Cloud Speech: ")
+		#print("Google Cloud Speech: ")
 		vals[i] = text_to_num(r.recognize_google_cloud(audio, \
-			preferred_phrases=["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"],\
-			 credentials_json=GOOGLE_CLOUD_SPEECH_CREDENTIALS), "googleCloud", results_dict)
-				timing["googleCloud"].append(time.time() - s)
-				print "timing", timing["googleCloud"]
+		preferred_phrases=["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"],\
+		credentials_json=GOOGLE_CLOUD_SPEECH_CREDENTIALS), "googleCloud", results_dict)
+
+		timing["googleCloud"].append(time.time() - s)
+		print "timing", timing["googleCloud"]
 		#print("Google Cloud " + str(vals[i]))
 	except sr.UnknownValueError:
 		logging.debug("Google Cloud Speech could not understand audio")
@@ -171,17 +171,17 @@ def googleCloud(audio, vals, i, results_dict, timing):
 		logging.debug("Could not request results from Google Cloud Speech service; {0}".format(e))
 		results_dict["googleCloud"] = [DEFAULT]
 		results_dict["googleCloud_fil"] = [DEFAULT]
-		except:
-			pass
+	except:
+	    pass
 #Query Wit
 def wit(audio, vals, i, results_dict, timing):
 	# recognize speech using Wit.ai
 	WIT_AI_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx"  # Wit.ai keys are 32-character uppercase alphanumeric strings
 	try:
-				s = time.time()
+		s = time.time()
 		#print("Wit.ai: ")
 		vals[i] = text_to_num(r.recognize_wit(audio, key=WIT_AI_KEY), "wit", results_dict)
-				timing["wit"].append(time.time() - s)
+		timing["wit"].append(time.time() - s)
 		#print("Wit " + str(vals[i]))
 	except sr.UnknownValueError:
 		logging.debug("Wit.ai could not understand audio")
@@ -198,10 +198,10 @@ def bing(audio, vals, i, results_dict, timing):
 		
 	BING_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 	try:
-				s = time.time()
+		s = time.time()
 		#print("Microsoft Bing Voice Recognition: ")
 		vals[i] = text_to_num(r.recognize_bing(audio, key=BING_KEY), "bing", results_dict)
-				timing["bing"].append(time.time() - s)
+		timing["bing"].append(time.time() - s)
 	except sr.UnknownValueError:
 		logging.debug("Microsoft Bing Voice Recognition could not understand audio")
 		results_dict["bing"] = [DEFAULT]
@@ -216,11 +216,11 @@ def ibm(audio, vals, i, results_dict, timing, show_all=False):
 	IBM_USERNAME = "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"  # IBM Speech to Text usernames are strings of the form XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 	IBM_PASSWORD = "XXXXXXXXXX"  # IBM Speech to Text passwords are mixed-case alphanumeric strings
 	try:
-				s = time.time()
+		s = time.time()
 		#print("IBM Speech to Text: ")
 		vals[i] = text_to_num(r.recognize_ibm(audio, username=IBM_USERNAME, \
-			password=IBM_PASSWORD, show_all=False), "ibm", results_dict)
-				timing["ibm"].append(time.time() - s)
+		password=IBM_PASSWORD, show_all=False), "ibm", results_dict)
+		timing["ibm"].append(time.time() - s)
 	except sr.UnknownValueError:
 		logging.debug("IBM Speech to Text could not understand audio")
 		results_dict["ibm"] = [DEFAULT]
@@ -233,9 +233,9 @@ def ibm(audio, vals, i, results_dict, timing, show_all=False):
 def google(audio, vals, i, results_dict, timing):
 	try:
 		#print("Google: ")
-				s= time.time()
+		s= time.time()
 		vals[i] = text_to_num(r.recognize_google(audio), "google", results_dict)
-				timing["google"].append(time.time() - s)
+		timing["google"].append(time.time() - s)
 	except:
 		logging.debug("Google could not understand")
 		results_dict["google"] = [DEFAULT]
@@ -365,9 +365,9 @@ def getNum(audio_file, results_dict, digit_num=0, ans=[]):
 	results_dict_threaded = manage_vars.dict()
 	results = []
 	threads = []
-		timed = manage_vars.dict()
-		for api in apis:
-			timed[api] = manage_vars.list()
+	timed = manage_vars.dict()
+	for api in apis:
+	    timed[api] = manage_vars.list()
 	apis_func = [googleCloud, sphinx, wit, bing, google, ibm]
 	i = 0
 	start = time.time()
@@ -379,7 +379,7 @@ def getNum(audio_file, results_dict, digit_num=0, ans=[]):
 		
 	for thread in threads:
 		thread.join()
-	end = time.time()
+	        end = time.time()
 		print "getnumtime", end-start
 		print timed
 	results_dict["time" + str(digit_num)] = end - start
@@ -404,14 +404,14 @@ def getNum(audio_file, results_dict, digit_num=0, ans=[]):
 	results = sorted(results, key=results.count, reverse=True)
 	if not results:
 		logging.debug("FOUND NOTHING")
-				ans[digit_num] = DEFAULT
+		ans[digit_num] = DEFAULT
 		return DEFAULT
 	else:
 		# print(results[0])
 		logging.info("DETERMINED AS: " + str(results[0]))
-				print ans
-				print digit_num
-				ans[digit_num] = results[0]
+		print ans
+		print digit_num
+		ans[digit_num] = results[0]
 		return results[0]
 
 def test_dir(directory):
