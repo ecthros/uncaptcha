@@ -34,22 +34,17 @@ group.add_argument("--audio", action='store_true', help="attack audio recaptcha"
 parser.add_argument("--driver", action="store", help="specify custom chromedriver path")
 parser.add_argument("--reddit", action="store_true", help="run attack against Reddit's recaptcha")
 parser.add_argument("--level", action="store", help="set log level", default="debug", choices=("debug", "warning"))
-#parser.add_argument("--mla", action="store_true", help="enable multi login app control")
 
 args = parser.parse_args()
 ATTACK_IMAGES = args.image
 ATTACK_AUDIO = args.audio
 ATTACK_REDDIT = args.reddit
 CHROMEDRIVER_PATH = args.driver
-MLA = False #args.mla
-# TODO implement LEVEL setting
 
 if not ATTACK_AUDIO and not ATTACK_IMAGES:
     parser.print_help()
     sys.exit()
 
-if MLA: 
-    pass
     
 ############################## UTIL FUNCTIONS #############################
 def init(task_type):
@@ -87,28 +82,28 @@ def click_tiles(driver, coords):
     for (x, y) in coords:
         logging.debug("[*] Going to click {} {}".format(x,y))
         tile1 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//div[@id="rc-imageselect-target"]/table/tbody/tr[{0}]/td[{1}]'.format(x, y))))
-        orig_srcs[(x,y)] = driver.find_element(By.XPATH, "//*[@id=\"rc-imageselect-target\"]/table/tbody/tr[{}]/td[{}]/div/div[1]/img".format(x,y)).get_attribute("src")
-        new_srcs[(x,y)] = orig_srcs[(x,y)] # to check if image has changed 
+        orig_srcs[(x, y)] = driver.find_element(By.XPATH, "//*[@id=\"rc-imageselect-target\"]/table/tbody/tr[{}]/td[{}]/div/div[1]/img".format(x,y)).get_attribute("src")
+        new_srcs[(x, y)] = orig_srcs[(x, y)] # to check if image has changed 
         tile1.click()
         wait_between(0.1, 0.5)
 
     logging.debug("[*] Downloading new inbound image...")
     new_files = {}
     for (x, y) in orig_srcs:
-        while new_srcs[(x,y)] == orig_srcs[(x,y)]:
-            new_srcs[(x,y)] = driver.find_element(By.XPATH, "//*[@id=\"rc-imageselect-target\"]/table/tbody/tr[{}]/td[{}]/div/div[1]/img".format(x,y)).get_attribute("src")
+        while new_srcs[(x, y)] == orig_srcs[(x, y)]:
+            new_srcs[(x, y)] = driver.find_element(By.XPATH, "//*[@id=\"rc-imageselect-target\"]/table/tbody/tr[{}]/td[{}]/div/div[1]/img".format(x,y)).get_attribute("src")
             time.sleep(0.5)
-        urllib.urlretrieve(new_srcs[(x,y)], "captcha.jpeg")
-        new_path = TASK_PATH+"/new_output{}{}.jpeg".format(x,y)
+        urllib.urlretrieve(new_srcs[(x, y)], "captcha.jpeg")
+        new_path = TASK_PATH+"/new_output{}{}.jpeg".format(x, y)
         os.system("mv captcha.jpeg "+new_path)
-        new_files[(x,y)] = (new_path)
+        new_files[(x, y)] = (new_path)
     return new_files
 
 def handle_queue(to_solve_queue, coor_dict):
     ts = []
     for (x,y) in to_solve_queue:
-        image_file = to_solve_queue[(x,y)]
-        t = threading.Thread(target=should_click_image, args=(image_file,x,y,coor_dict))        
+        image_file = to_solve_queue[(x, y)]
+        t = threading.Thread(target=should_click_image, args=(image_file, x, y,coor_dict))        
         ts.append(t)
         t.start()
     for t in ts:
@@ -156,7 +151,7 @@ def image_recaptcha(driver):
         for f in [TASK_PATH+"/"+f for f in os.listdir(TASK_PATH) if "output_" in f]:
             y = idx % 3 + 1  # making coordinates 1 indexed to match xpaths 
             x = idx / 3 + 1
-            to_solve_queue[(x,y)] = f
+            to_solve_queue[(x, y)] = f
             idx += 1
         
         logging.debug(to_solve_queue)
@@ -267,12 +262,10 @@ def main():
     chrome_options.add_argument("--disable-bundled-ppapi-flash")
     chrome_options.add_argument("--incognito")
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.109 Safari/537.36")
-    chrome_options.add_argument("--disable-plugins-discovery");
+    chrome_options.add_argument("--disable-plugins-discovery")
 
     
-    if MLA:
-        driver = webdriver.Remote(command_executor=mla_url, desired_capabilities={'multiloginapp-profileId': mla_profile_id})
-    elif CHROMEDRIVER_PATH:
+    if CHROMEDRIVER_PATH:
         driver = webdriver.Chrome(CHROMEDRIVER_PATH, chrome_options=chrome_options)
         logging.debug("[*] Starting custom chromedriver %s" % CHROMEDRIVER_PATH) 
     else:
@@ -351,5 +344,5 @@ def main():
                 guess_again = False
   
     input("")
-#main()
+# main()
 test_all()
