@@ -39,10 +39,9 @@ $ python main.py
 
 This opens reddit.com, interacts with the page to go to account signup, generates a fake username, email, password, and then attacks the audio captcha. Once the captcha is completed (whether it passed or not), the browser exits. 
 
-## Paper
+## To learn more
 
 Please read our paper, located [here](https://www.usenix.org/system/files/conference/woot17/woot17-paper-bock.pdf), for more information. Additionally, you can visit our website [here](http://uncaptcha.cs.umd.edu/), or check out the original [![Slides for USENIX WOOT '17](https://drive.google.com/file/d/0BwuogdPv-7DxMDA3N3l1X09nV1U/view?usp=sharing)](https://drive.google.com/file/d/0BwuogdPv-7DxMDA3N3l1X09nV1U/view?usp=sharing).
-.
 
 ## Disclaimer
 
