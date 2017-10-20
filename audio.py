@@ -2,7 +2,6 @@ import speech_recognition as sr
 import os
 import time
 import json
-from collections import Counter
 import logging, sys
 import multiprocessing 
 import pprint
@@ -10,6 +9,9 @@ import csv
 import new_filter_function
 import threading
 import googleapiclient
+from collections import Counter
+
+
 LEVEL = logging.INFO
 logging.basicConfig(stream=sys.stderr, level=LEVEL)
 logging.getLogger('oauth2client.transport').setLevel(logging.ERROR)
@@ -17,6 +19,7 @@ logging.getLogger('googleapiclient.discovery').setLevel(logging.CRITICAL)
 logging.getLogger('oauth2client.client').setLevel(logging.ERROR)
 
 pp = pprint.PrettyPrinter(indent=4)
+
 
 #DEFAULT = "X" # all un-identified digits remain unknown
 DEFAULT = "6" # all un-identified digits are mapped to "6"
