@@ -4,7 +4,7 @@ Defeating Google's audio reCaptcha system with 85% accuracy. ![uncaptcha](https:
 
 ## Inspiration
 
-Across the Internet, hundreds of thousands of sites rely on Google's reCaptcha system for defense against bots (in fact, Devpost uses reCaptcha when creating an new account). After a Google research team demonstrated a near [complete defeat](https://pdfs.semanticscholar.org/ceef/94e5e9b6188e9aca558efcf92e57ec987bc4.pdf) of the text reCaptcha in 2012, the reCaptcha system evolved to rely on audio and image challenges, historically more difficult challenges for automated systems to solve. Google has continually iterated on its design, releasing a newer and more powerful version as recently as just this year. Successfully demonstrating a defeat of this captcha system would spell significant vulnerability for a huge number of popular sites. 
+Across the Internet, hundreds of thousands of sites rely on Google's reCaptcha system for defense against bots (in fact, Devpost uses reCaptcha when creating an new account). After a Google research team demonstrated a near [complete defeat](https://pdfs.semanticscholar.org/ceef/94e5e9b6188e9aca558efcf92e57ec987bc4.pdf) of the text reCaptcha in 2012, the reCaptcha system evolved to rely on audio and image challenges, historically more difficult challenges for automated systems to solve. Google has continually iterated on its design, releasing a newer and more powerful version as recently as just this year. Successfully demonstrating a defeat of this captcha system spells significant vulnerability for hundreds of thousands of popular sites. 
 
 ## What it does
 
@@ -14,8 +14,10 @@ Our unCaptcha system has attack capabilities written for the audio captcha. Usin
 
 Google's reCaptcha system uses an advanced risk analysis system to determine programmatically how likely a given user is to be a human or a bot. It takes into account your cookies (and by extension, your interaction with other Google services), the speed at which challenges are solved, mouse movements, and (obviously) how successfully you solve the given task. As the system gets increasingly suspicious, it delivers increasingly difficult challenges, and requires the user to solve more of them. Researchers have already identified minor weaknesses with the reCaptcha system - 9 days of legitimate (ish) interaction with Google's services is usually enough to lower the system's suspicion level significantly.
 
-#### Audio
-The format of the audio captcha is a varied-length series of numbers spaced out read aloud at varied speeds, pitches, and accents through background noise. To attack this captcha, the audio payload is identified on the page, downloaded, and automatically split by locations of speech. From there, each number audio bit is uploaded to 6 different audio transcription services (IBM, Google Cloud, Google Speech Recognition, Sphinx, Wit-AI, Bing Speech Recognition), and these results are collected. We ensemble the results from each of these to probabilistically enumerate the most likely string of numbers with a predetermined heuristic. These numbers are then organically typed into the captcha, and the captcha is completed. From testing, we have seen 92%+ accuracy in individual number identification, and 85%+ accuracy in defeating the audio captcha in its entirety. 
+#### How it works
+The format of the audio captcha is a varied-length series of numbers spaced out read aloud at varied speeds, pitches, and accents through background noise. To attack this captcha, the audio payload is identified on the page, downloaded, and automatically split by locations of speech. 
+
+From there, each number audio bit is uploaded to 6 different free, online audio transcription services (IBM, Google Cloud, Google Speech Recognition, Sphinx, Wit-AI, Bing Speech Recognition), and these results are collected. We ensemble the results from each of these to probabilistically enumerate the most likely string of numbers with a predetermined heuristic. These numbers are then organically typed into the captcha, and the captcha is completed. From testing, we have seen 92%+ accuracy in individual number identification, and 85%+ accuracy in defeating the audio captcha in its entirety. 
 
 ## Installation
 
@@ -37,9 +39,9 @@ $ python main.py
 
 This opens reddit.com, interacts with the page to go to account signup, generates a fake username, email, password, and then attacks the audio captcha. Once the captcha is completed (whether it passed or not), the browser exits. 
 
-## Paper
+## To learn more
 
-Please read our paper, located [here](https://www.usenix.org/system/files/conference/woot17/woot17-paper-bock.pdf), for more information. Additionally, you can visit our website [here](http://uncaptcha.cs.umd.edu/).
+Please read our paper, located [here](https://www.usenix.org/system/files/conference/woot17/woot17-paper-bock.pdf), for more information. Additionally, you can visit our website [here](http://uncaptcha.cs.umd.edu/), or check out the original [![Slides for USENIX WOOT '17](https://drive.google.com/file/d/0BwuogdPv-7DxMDA3N3l1X09nV1U/view?usp=sharing)](https://drive.google.com/file/d/0BwuogdPv-7DxMDA3N3l1X09nV1U/view?usp=sharing).
 
 ## Disclaimer
 
@@ -55,6 +57,7 @@ Additionally, we have removed our API keys from all the necessary queries. If yo
 
 [![Watch the video](https://img.youtube.com/watch?v=wXrTQzskJLE0.jpg)](https://www.youtube.com/watch?v=wXrTQzskJLE "UnCaptcha Example")
 
+[![Slides for USENIX WOOT '17](https://drive.google.com/file/d/0BwuogdPv-7DxMDA3N3l1X09nV1U/view?usp=sharing)](https://drive.google.com/file/d/0BwuogdPv-7DxMDA3N3l1X09nV1U/view?usp=sharing)
 
 ## Contributors
 
