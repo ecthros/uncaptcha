@@ -4,7 +4,7 @@ Defeating Google's audio reCaptcha system with 85% accuracy. ![uncaptcha](https:
 
 ## Inspiration
 
-Across the Internet, hundreds of thousands of sites rely on Google's reCaptcha system for defense against bots (in fact, Devpost uses reCaptcha when creating an new account). After a Google research team demonstrated a near [complete defeat](https://pdfs.semanticscholar.org/ceef/94e5e9b6188e9aca558efcf92e57ec987bc4.pdf) of the text reCaptcha in 2012, the reCaptcha system evolved to rely on audio and image challenges, historically more difficult challenges for automated systems to solve. Google has continually iterated on its design, releasing a newer and more powerful version as recently as just this year. Successfully demonstrating a defeat of this captcha system spells significant vulnerability for hundreds of thousands of popular sites. 
+Across the Internet, hundreds of thousands of sites rely on Google's reCaptcha system for defense against bots (in fact, Devpost uses reCaptcha when creating a new account). After a Google research team demonstrated a near [complete defeat](https://pdfs.semanticscholar.org/ceef/94e5e9b6188e9aca558efcf92e57ec987bc4.pdf) of the text reCaptcha in 2012, the reCaptcha system evolved to rely on audio and image challenges, historically more difficult challenges for automated systems to solve. Google has continually iterated on its design, releasing a newer and more powerful version as recently as just this year. Successfully demonstrating a defeat of this captcha system spells significant vulnerability for hundreds of thousands of popular sites. 
 
 ## What it does
 
