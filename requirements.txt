@@ -6,3 +6,5 @@ clarifai==2.0.21
 SpeechRecognition==3.6.3
 sphinx==1.5.5
 faker==0.7.10
+scipy==1.0.0
+google-api-python-client==1.6.4
