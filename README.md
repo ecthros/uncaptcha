@@ -2,6 +2,16 @@
 
 Defeating Google's audio reCaptcha system with 85% accuracy. ![uncaptcha](https://user-images.githubusercontent.com/14065974/30930456-c2cf7e0a-a38f-11e7-869e-d7aa783e6f02.gif)
 
+## Disclaimer
+
+unCaptcha is intended to be a **proof of concept**.  As of the time of [our paper](https://www.usenix.org/system/files/conference/woot17/woot17-paper-bock.pdf), we found it to successfully solve reCaptcha's audio challenges with 85% success.  **Since that time, reCaptcha appears to include some additional protections that limit unCaptcha's success.** __**We will not be maintaining this code to be an effective attack on reCaptcha.**__
+
+For instance, Google has also improved their browser automation detection. This means that Selenium cannot be used in its current state to get captchas from Google. This may lead to Google sending odd audio segments back to the end user.  Additionally, we have observed that some audio challenges include not only digits, but small snippets of spoken text.
+
+We encourage you to be careful when doing research in this field, to be mindful of local, state, and federal law, and to responsibly disclose any potential vulnerabilities to Google immediately.
+
+Additionally, we have removed our API keys from all the necessary queries. If you are looking to recreate some of the work or are doing your own research in this area, you will need to acquire API keys from each of the six services used. These keys are delineated in our files by a long string of the character 'X'. 
+
 ## Inspiration
 
 Across the Internet, hundreds of thousands of sites rely on Google's reCaptcha system for defense against bots (in fact, Devpost uses reCaptcha when creating a new account). After a Google research team demonstrated a near [complete defeat](https://pdfs.semanticscholar.org/ceef/94e5e9b6188e9aca558efcf92e57ec987bc4.pdf) of the text reCaptcha in 2012, the reCaptcha system evolved to rely on audio and image challenges, historically more difficult challenges for automated systems to solve. Google has continually iterated on its design, releasing a newer and more powerful version as recently as just this year. Successfully demonstrating a defeat of this captcha system spells significant vulnerability for hundreds of thousands of popular sites. 
@@ -42,16 +52,6 @@ This opens reddit.com, interacts with the page to go to account signup, generate
 ## To learn more
 
 Please read our paper, located [here](https://www.usenix.org/system/files/conference/woot17/woot17-paper-bock.pdf), for more information. Additionally, you can visit our website [here](http://uncaptcha.cs.umd.edu/), or check out the original [![Slides for USENIX WOOT '17](https://drive.google.com/file/d/0BwuogdPv-7DxMDA3N3l1X09nV1U/view?usp=sharing)](https://drive.google.com/file/d/0BwuogdPv-7DxMDA3N3l1X09nV1U/view?usp=sharing).
-
-## Disclaimer
-
-unCaptcha is intended to be a proof of concept.  As of the time of [our paper](https://www.usenix.org/system/files/conference/woot17/woot17-paper-bock.pdf), we found it to successfully solve reCaptcha's audio challenges with 85% success.  Since that time, reCaptcha appears to include some additional protections that limit unCaptcha's success.
-
-For instance, Google has also improved their browser automation detection. This means that Selenium cannot be used in its current state to get captchas from Google. This may lead to Google sending odd audio segments back to the end user.  Additionally, we have observed that some audio challenges include not only digits, but small snippets of spoken text.
-
-We encourage you to be careful when doing research in this field, to be mindful of local, state, and federal law, and to responsibly disclose any potential vulnerabilities to Google immediately.
-
-Additionally, we have removed our API keys from all the necessary queries. If you are looking to recreate some of the work or are doing your own research in this area, you will need to acquire API keys from each of the six services used. These keys are delineated in our files by a long string of the character 'X'. 
 
 ## Example
 
